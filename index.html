@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Valentinsfrage</title>
+  <style>
+    :root { --bg:#0b0b10; --card:#12121a; --text:#f5f5f7; --muted:#b5b5c0; }
+    body{
+      margin:0; min-height:100vh; display:grid; place-items:center;
+      background: radial-gradient(1200px 700px at 20% 10%, #2a1a5e 0%, transparent 60%),
+                  radial-gradient(900px 600px at 80% 90%, #5e1a3a 0%, transparent 55%),
+                  var(--bg);
+      color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    .card{
+      width:min(720px, 92vw);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      padding:28px;
+      box-shadow: 0 20px 70px rgba(0,0,0,.45);
+      position:relative;
+      overflow:hidden;
+    }
+    h1{ margin:0 0 10px; font-size: clamp(26px, 3vw, 38px); letter-spacing:.2px; }
+    p{ margin:0 0 22px; color:var(--muted); font-size: 16px; line-height:1.4; }
+    .stage{ position:relative; height:220px; border-radius:18px; background: rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.08); }
+    .btn{
+      appearance:none; border:none; cursor:pointer;
+      padding:14px 18px; border-radius:14px;
+      font-weight:700; font-size:16px;
+      position:absolute;
+      transition: transform .08s ease;
+      user-select:none;
+    }
+    #yes{
+      left: 18%; top: 55%;
+      background: rgba(0,255,170,.18);
+      color: #d7fff3;
+      border:1px solid rgba(0,255,170,.30);
+    }
+    #no{
+      left: 62%; top: 55%;
+      background: rgba(255,80,140,.16);
+      color: #ffe2ef;
+      border:1px solid rgba(255,80,140,.28);
+    }
+    .footer{
+      margin-top:16px;
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      color: rgba(255,255,255,.45); font-size:13px;
+    }
+    .pill{
+      padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+    .success{
+      margin-top:18px; display:none;
+      padding:14px 14px; border-radius:16px;
+      border:1px solid rgba(0,255,170,.25);
+      background: rgba(0,255,170,.10);
+      color:#eafff8;
+    }
+    a{ color:#d7c7ff; text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Willst du mein Valentin sein? 💌</h1>
+    <p>Sei ehrlich… aber wähle weise 😄</p>
+
+    <div class="stage" id="stage">
+      <button class="btn" id="yes">JA ✅</button>
+      <button class="btn" id="no">NEIN ❌</button>
+    </div>
+
+    <div class="success" id="success">
+      <strong>Yesss! 🎉</strong><br/>
+      Level 2 ist freigeschaltet: <em>G-Date Gambling</em> 😈🎰<br/>
+      <span style="opacity:.9">Tipp: Klick unten auf „Weiter“.</span><br/><br/>
+      <a href="./slot.html">➡️ Weiter</a>
+    </div>
+
+    <div class="footer">
+      <span class="pill">Made with ❤️ + ein bisschen Chaos</span>
+      <span class="pill">QR-Code führt hierher</span>
+    </div>
+  </div>
+
+  <script>
+    const stage = document.getElementById('stage');
+    const noBtn = document.getElementById('no');
+    const yesBtn = document.getElementById('yes');
+    const success = document.getElementById('success');
+
+    function moveNoButton() {
+      const rect = stage.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const pad = 12;
+      const maxX = rect.width - btnRect.width - pad;
+      const maxY = rect.height - btnRect.height - pad;
+
+      // neue Position – möglichst weit weg von der aktuellen Maus
+      const x = pad + Math.random() * maxX;
+      const y = pad + Math.random() * maxY;
+
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top  = `${y}px`;
+
+      noBtn.style.transform = `rotate(${(Math.random()*8 - 4).toFixed(2)}deg)`;
+    }
+
+    // NO weicht aus: on hover + on touch attempt
+    noBtn.addEventListener('mouseenter', moveNoButton);
+    noBtn.addEventListener('mousedown', moveNoButton);
+    noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoButton(); }, { passive:false });
+
+    yesBtn.addEventListener('click', () => {
+      success.style.display = 'block';
+      yesBtn.disabled = true;
+      noBtn.disabled = true;
+      yesBtn.style.opacity = 0.65;
+      noBtn.style.opacity = 0.35;
+    });
+  </script>
+</body>
+</html>
