@@ -25,7 +25,7 @@ body{
   position:relative;
 }
 
-/* FALLENDE HERZEN (ohne Emojis -> einfache Herzform mit CSS) */
+/* FALLENDE HERZEN */
 .hearts{
   position:absolute;
   inset:0;
@@ -128,14 +128,14 @@ h1{
   border: 1px solid var(--pink);
 }
 
-/* ERFOLG-OVERLAY */
+/* AUSGRAU-OVERLAY NACH YES */
 .overlay{
   position:absolute;
   inset:0;
   display:grid;
   place-items:center;
-  background: rgba(255, 105, 180, .18);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 105, 180, .35);
+  backdrop-filter: blur(10px);
   opacity:0;
   pointer-events:none;
   transition: opacity .25s ease;
@@ -148,8 +148,13 @@ h1{
 }
 
 .success{
-  font-size: 48px;
+  background:white;
+  padding: 22px 26px;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.12);
+  font-size: 22px;
   color:#b0003a;
+  font-weight:700;
 }
 </style>
 </head>
@@ -167,7 +172,7 @@ h1{
   </div>
 
   <div class="overlay" id="overlay">
-    <div class="success">Thank you.</div>
+    <div class="success">She said YES 💗</div>
   </div>
 </div>
 
@@ -175,7 +180,7 @@ h1{
 const heartsWrap = document.getElementById('hearts');
 const HEART_COUNT = 30;
 
-// FALLENDE HERZEN ERZEUGEN
+// FALLENDE HERZEN
 for (let i = 0; i < HEART_COUNT; i++) {
   const h = document.createElement('div');
   h.className = 'heart';
@@ -193,7 +198,7 @@ const yesBtn = document.getElementById('yes');
 const overlay = document.getElementById('overlay');
 
 function moveNoButton(){
-  const pad = 16;
+  const pad = 10;
   const s = stage.getBoundingClientRect();
   const b = noBtn.getBoundingClientRect();
 
@@ -209,14 +214,17 @@ function moveNoButton(){
   noBtn.style.top  = (y + b.height/2) + 'px';
 }
 
-// NO weicht aus
+// NO springt sofort aggressiv weg
 noBtn.addEventListener('mouseenter', moveNoButton);
 noBtn.addEventListener('pointerdown', (e)=>{ e.preventDefault(); moveNoButton(); });
 noBtn.addEventListener('click', (e)=>{ e.preventDefault(); moveNoButton(); });
 
-// YES zeigt Overlay
+// YES → Overlay + SMS-Vorschlag öffnen
 yesBtn.addEventListener('click', ()=>{
   overlay.classList.add('show');
+
+  const message = encodeURIComponent("She said YES to Valentine 💗");
+  window.location.href = "sms:01608347263?body=" + message;
 });
 
 overlay.addEventListener('click', ()=> overlay.classList.remove('show'));
