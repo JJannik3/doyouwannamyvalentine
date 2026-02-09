@@ -19,7 +19,6 @@ body{
   place-items:center;
   position:relative;
 
-  /* schöner romantischer Hintergrund */
   background:
     radial-gradient(900px 600px at 15% 15%, rgba(255,255,255,.28), transparent 60%),
     radial-gradient(900px 600px at 85% 20%, rgba(255,255,255,.16), transparent 60%),
@@ -34,7 +33,6 @@ body{
   to{ background-position: 100% 90%; }
 }
 
-/* fallende Herzen */
 .hearts{position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0;}
 .heart{
   position:absolute; top:-10vh;
@@ -61,7 +59,6 @@ body{
   to{ transform: translateY(115vh) translateX(var(--drift)) rotate(var(--rot)); opacity:0; }
 }
 
-/* Karte */
 .card{
   width:min(580px, 92vw);
   padding: 46px 30px 30px;
@@ -75,7 +72,6 @@ body{
   z-index:2;
 }
 
-/* Titel Animation */
 h1{
   margin: 0 0 18px;
   font-size: clamp(28px, 4.2vw, 44px);
@@ -99,7 +95,6 @@ h1{
   50%{ transform: translateY(-2px) scale(1.002); }
 }
 
-/* Stage */
 .stage{
   position:relative;
   height: 160px;
@@ -107,9 +102,9 @@ h1{
   background: rgba(255,255,255,.14);
   border: 1px solid rgba(255,255,255,.22);
   overflow:hidden;
+  touch-action: none; /* wichtig fürs mobile pointer-handling */
 }
 
-/* Buttons */
 .btn{
   position:absolute;
   top:50%;
@@ -121,6 +116,7 @@ h1{
   font-size: 16px;
   font-weight: 800;
   box-shadow: 0 16px 40px rgba(0,0,0,.24);
+  -webkit-tap-highlight-color: transparent;
 }
 
 #yes{
@@ -266,27 +262,57 @@ function relocateNo(farFromX, farFromY){
   noBtn.style.top  = (best.y + b.height/2) + 'px';
 }
 
-function cursorPosInStage(e){
+function cursorPosInStageFromPointer(e){
   const s = stage.getBoundingClientRect();
   const x = e.clientX - s.left;
   const y = e.clientY - s.top;
   return {x,y};
 }
 
-/* NEIN springt nur weg, wenn man nahe kommt */
+/* DESKTOP: NEIN springt weg, wenn man nahe kommt */
 stage.addEventListener('pointermove', (e)=>{
-  const p = cursorPosInStage(e);
+  // nur bei Maus "hover-like"
+  if(e.pointerType !== 'mouse') return;
+
+  const p = cursorPosInStageFromPointer(e);
   const b = noBtn.getBoundingClientRect();
   const s = stage.getBoundingClientRect();
   const noCenterX = (b.left - s.left) + b.width/2;
   const noCenterY = (b.top  - s.top ) + b.height/2;
 
   const dist = Math.hypot(p.x - noCenterX, p.y - noCenterY);
-
   if(dist < 120){
     relocateNo(p.x, p.y);
   }
 }, {passive:true});
+
+/* MOBILE: sobald man versucht, NEIN zu tippen -> weg! */
+function dodgeFromTap(e){
+  // verhindert "klick" / focus / delay auf mobile
+  e.preventDefault();
+  e.stopPropagation();
+
+  const s = stage.getBoundingClientRect();
+  const b = noBtn.getBoundingClientRect();
+
+  // Tip-Position relativ zur stage
+  let x, y;
+  if(e.touches && e.touches[0]){
+    x = e.touches[0].clientX - s.left;
+    y = e.touches[0].clientY - s.top;
+  } else {
+    x = e.clientX - s.left;
+    y = e.clientY - s.top;
+  }
+
+  // kleine "Flucht"-Tendenz: weg vom Finger
+  relocateNo(x, y);
+}
+
+// wichtig: auf NO selbst (damit es auch wirklich beim Tip-Versuch ausweicht)
+noBtn.addEventListener('pointerdown', dodgeFromTap, {passive:false});
+noBtn.addEventListener('touchstart', dodgeFromTap, {passive:false});
+noBtn.addEventListener('click', (e)=>{ e.preventDefault(); }, {passive:false});
 
 requestAnimationFrame(()=>{
   noBtn.style.left = '72%';
@@ -295,16 +321,16 @@ requestAnimationFrame(()=>{
 
 /* JA-Klick: WhatsApp öffnen + Herz anzeigen */
 let locked = false;
-yesBtn.addEventListener('click', async ()=>{
+yesBtn.addEventListener('click', ()=>{
   if(locked) return;
   locked = true;
 
-  // WhatsApp DIREKT aus dem Klick öffnen (wichtig!)
   const msg = encodeURIComponent("Ich habe JA gesagt <3");
   const waUrl = "https://wa.me/491608347263?text=" + msg;
+
+  // auf mobile ist _self oft zuverlässiger; wenn du lieber neuen Tab willst: _blank
   window.open(waUrl, "_blank");
 
-  // Herz anzeigen
   card.style.display = 'none';
   final.classList.add('show');
 });
