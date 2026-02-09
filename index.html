@@ -19,7 +19,7 @@ body{
   place-items:center;
   position:relative;
 
-  /* nicer romantic background */
+  /* schöner romantischer Hintergrund */
   background:
     radial-gradient(900px 600px at 15% 15%, rgba(255,255,255,.28), transparent 60%),
     radial-gradient(900px 600px at 85% 20%, rgba(255,255,255,.16), transparent 60%),
@@ -34,7 +34,7 @@ body{
   to{ background-position: 100% 90%; }
 }
 
-/* Falling CSS hearts */
+/* fallende Herzen */
 .hearts{position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0;}
 .heart{
   position:absolute; top:-10vh;
@@ -61,7 +61,7 @@ body{
   to{ transform: translateY(115vh) translateX(var(--drift)) rotate(var(--rot)); opacity:0; }
 }
 
-/* Card */
+/* Karte */
 .card{
   width:min(580px, 92vw);
   padding: 46px 30px 30px;
@@ -75,13 +75,12 @@ body{
   z-index:2;
 }
 
-/* Title animation */
+/* Titel Animation */
 h1{
   margin: 0 0 18px;
   font-size: clamp(28px, 4.2vw, 44px);
   color: rgba(255,255,255,.96);
   position:relative;
-
   opacity:0;
   transform: translateY(12px) scale(.985);
   animation:
@@ -122,9 +121,6 @@ h1{
   font-size: 16px;
   font-weight: 800;
   box-shadow: 0 16px 40px rgba(0,0,0,.24);
-  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
-  user-select:none;
-  -webkit-tap-highlight-color: transparent;
 }
 
 #yes{
@@ -132,20 +128,15 @@ h1{
   background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,255,255,.78));
   color: var(--deep);
 }
-#yes:hover{ filter: brightness(1.03); box-shadow: 0 20px 48px rgba(0,0,0,.28); }
 
 #no{
   left: 72%;
   background: rgba(255,255,255,.12);
   color: rgba(255,255,255,.92);
   border: 1px solid rgba(255,255,255,.35);
-
-  /* IMPORTANT: now it IS clickable by default,
-     but we will dodge only when pointer gets close */
-  pointer-events: auto;
 }
 
-/* Small heart overlay after YES (center) */
+/* kleines Herz nach JA */
 .final{
   position:fixed;
   inset:0;
@@ -162,7 +153,6 @@ h1{
   position:relative;
   transform: scale(.7);
   animation: pop .36s cubic-bezier(.2,.9,.2,1) forwards;
-  filter: drop-shadow(0 22px 80px rgba(0,0,0,.35));
 }
 
 @keyframes pop{
@@ -234,7 +224,7 @@ h1{
   </div>
 
 <script>
-/* Falling hearts */
+/* fallende Herzen erzeugen */
 const heartsWrap = document.getElementById('hearts');
 const HEART_COUNT = 34;
 for (let i = 0; i < HEART_COUNT; i++) {
@@ -254,8 +244,6 @@ const yesBtn = document.getElementById('yes');
 const card = document.getElementById('card');
 const final = document.getElementById('final');
 
-/* NO only dodges when you try to go on it (near/hover),
-   not by itself. */
 function relocateNo(farFromX, farFromY){
   const pad = 8;
   const s = stage.getBoundingClientRect();
@@ -280,11 +268,12 @@ function relocateNo(farFromX, farFromY){
 
 function cursorPosInStage(e){
   const s = stage.getBoundingClientRect();
-  const x = (e.clientX ?? (e.touches?.[0]?.clientX || 0)) - s.left;
-  const y = (e.clientY ?? (e.touches?.[0]?.clientY || 0)) - s.top;
+  const x = e.clientX - s.left;
+  const y = e.clientY - s.top;
   return {x,y};
 }
 
+/* NEIN springt nur weg, wenn man nahe kommt */
 stage.addEventListener('pointermove', (e)=>{
   const p = cursorPosInStage(e);
   const b = noBtn.getBoundingClientRect();
@@ -294,51 +283,30 @@ stage.addEventListener('pointermove', (e)=>{
 
   const dist = Math.hypot(p.x - noCenterX, p.y - noCenterY);
 
-  // only dodge when you get close (feels like "only when you try")
   if(dist < 120){
     relocateNo(p.x, p.y);
   }
 }, {passive:true});
 
-// Also dodge on hover directly (desktop)
-noBtn.addEventListener('mouseenter', (e)=>{
-  const s = stage.getBoundingClientRect();
-  relocateNo(s.width/2, s.height/2);
-});
-
-// Initial position
 requestAnimationFrame(()=>{
   noBtn.style.left = '72%';
   noBtn.style.top = '50%';
 });
 
-/* YES: show small heart + push */
+/* JA-Klick: WhatsApp öffnen + Herz anzeigen */
 let locked = false;
 yesBtn.addEventListener('click', async ()=>{
   if(locked) return;
   locked = true;
 
-  // hide buttons, keep background/card invisible for clean look
+  // WhatsApp DIREKT aus dem Klick öffnen (wichtig!)
+  const msg = encodeURIComponent("Ich habe YES geklickt 💕");
+  const waUrl = "https://wa.me/491608347263?text=" + msg;
+  window.open(waUrl, "_blank");
+
+  // Herz anzeigen
   card.style.display = 'none';
   final.classList.add('show');
-
-  // Real push to your phone via ntfy
-  // -> ntfy app installieren und Topic abonnieren:
-  //    valentine-olli-01608347263
-  const NTFY_TOPIC = "valentine-olli-01608347263";
-  try{
-    await fetch("https://ntfy.sh/" + NTFY_TOPIC, {
-      method: "POST",
-      headers: {
-        "Title": "Valentine",
-        "Priority": "5",
-        "Tags": "heart"
-      },
-      body: "Sie hat JA geklickt."
-    });
-  }catch(err){
-    // ignore
-  }
 });
 </script>
 </body>
