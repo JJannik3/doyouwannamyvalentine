@@ -7,187 +7,192 @@
 
 <style>
 :root{
-  --pink: #ff6b9a;
-  --soft-pink: #ffe3ee;
+  --pink:#ff6b9a;
+  --soft:#ffe3ee;
+  --deep:#b0003a;
 }
 
-html,body{
-  height:100%;
-  margin:0;
-  font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-}
-
+html,body{height:100%;margin:0;font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;}
 body{
   overflow:hidden;
-  background: linear-gradient(180deg, white 40%, var(--soft-pink) 100%);
+  background: linear-gradient(180deg, #fff 40%, var(--soft) 100%);
   display:grid;
   place-items:center;
   position:relative;
 }
 
-/* FALLENDE HERZEN */
-.hearts{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  overflow:hidden;
-}
-
+/* Falling CSS hearts */
+.hearts{position:absolute; inset:0; pointer-events:none; overflow:hidden;}
 .heart{
-  position:absolute;
-  top:-10vh;
-  width:16px;
-  height:16px;
+  position:absolute; top:-10vh;
+  width:16px; height:16px;
   background: var(--pink);
   transform: rotate(45deg);
   animation: fall linear infinite;
-  opacity:.8;
+  opacity:.85;
 }
-
-.heart:before,
-.heart:after{
+.heart:before,.heart:after{
   content:"";
   position:absolute;
-  width:16px;
-  height:16px;
+  width:16px; height:16px;
   background: var(--pink);
   border-radius:50%;
 }
-
 .heart:before{ top:-8px; left:0; }
 .heart:after{ left:-8px; top:0; }
 
 @keyframes fall{
-  from{
-    transform: translateY(0) translateX(0) rotate(45deg);
-    opacity:0;
-  }
+  from{ transform: translateY(0) translateX(0) rotate(45deg); opacity:0; }
   10%{ opacity:.9; }
-  to{
-    transform: translateY(115vh) translateX(var(--drift)) rotate(var(--rot));
-    opacity:0;
-  }
+  to{ transform: translateY(115vh) translateX(var(--drift)) rotate(var(--rot)); opacity:0; }
 }
 
-/* ZENTRALE KARTE */
 .card{
   width:min(560px, 92vw);
-  padding: 40px 30px;
+  padding: 42px 30px 30px;
   border-radius: 26px;
-  background: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.92);
   backdrop-filter: blur(10px);
   box-shadow: 0 18px 60px rgba(0,0,0,.12);
-  border: 1px solid rgba(255,255,255,.8);
+  border: 1px solid rgba(255,255,255,.85);
   text-align:center;
   position:relative;
 }
 
-/* FRAGE */
 h1{
-  margin: 0 0 20px;
+  margin: 0 0 18px;
   font-size: clamp(28px, 4.2vw, 44px);
-  color:#b0003a;
+  color: var(--deep);
 }
 
-/* BUTTON-STAGE */
 .stage{
   position:relative;
-  height: 140px;
+  height: 150px;
   border-radius: 18px;
-  background: rgba(255,255,255,.5);
-  border: 1px solid rgba(255,255,255,.65);
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(255,255,255,.7);
   overflow:hidden;
 }
 
-/* BUTTONS */
+/* Buttons */
 .btn{
   position:absolute;
-  top: 50%;
+  top:50%;
   transform: translate(-50%, -50%);
-  padding: 14px 24px;
+  padding: 14px 26px;
   border-radius: 999px;
   border: none;
   cursor:pointer;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 750;
   box-shadow: 0 12px 30px rgba(0,0,0,.12);
-  transition: transform .12s ease, box-shadow .12s ease;
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
   user-select:none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #yes{
   left: 36%;
   background: linear-gradient(135deg, #ff2e63, #ff6b9a);
-  color:white;
+  color: #fff;
 }
+#yes:hover{ filter: brightness(1.03); box-shadow: 0 16px 38px rgba(0,0,0,.16); }
 
 #no{
-  left: 70%;
-  background: white;
-  color:#b0003a;
+  left: 72%;
+  background: #fff;
+  color: var(--deep);
   border: 1px solid var(--pink);
 }
 
-/* AUSGRAU-OVERLAY NACH YES */
-.overlay{
+/* After YES: big heart */
+.result{
+  display:none;
+  height:150px;
+  border-radius: 18px;
+  position:relative;
+}
+
+.bigHeart{
+  width: 140px;
+  height: 140px;
+  margin: 0 auto;
+  background: var(--pink);
+  transform: rotate(45deg);
+  border-radius: 20px;
   position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  background: rgba(255, 105, 180, .35);
-  backdrop-filter: blur(10px);
-  opacity:0;
-  pointer-events:none;
-  transition: opacity .25s ease;
-  border-radius: 26px;
+  left:50%;
+  top:50%;
+  translate:-50% -50%;
+  box-shadow: 0 18px 60px rgba(0,0,0,.18);
+  animation: pulse .9s ease-in-out infinite alternate;
+}
+.bigHeart:before,.bigHeart:after{
+  content:"";
+  position:absolute;
+  width: 140px;
+  height: 140px;
+  background: var(--pink);
+  border-radius: 50%;
+}
+.bigHeart:before{ top:-70px; left:0; }
+.bigHeart:after{ left:-70px; top:0; }
+
+@keyframes pulse{
+  from{ transform: rotate(45deg) scale(1.00); }
+  to{ transform: rotate(45deg) scale(1.06); }
 }
 
-.overlay.show{
-  opacity:1;
-  pointer-events:auto;
+.initials{
+  position:absolute;
+  left:50%;
+  top:50%;
+  translate:-50% -50%;
+  color:white;
+  font-weight: 900;
+  letter-spacing: .08em;
+  font-size: 34px;
+  text-transform: uppercase;
+  text-shadow: 0 10px 30px rgba(0,0,0,.25);
+  z-index:2;
+  transform: rotate(-45deg);
 }
 
-.success{
-  background:white;
-  padding: 22px 26px;
-  border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(0,0,0,.12);
-  font-size: 22px;
-  color:#b0003a;
-  font-weight:700;
+/* Greyed out look after YES */
+.dim{
+  filter: grayscale(.08) saturate(.9);
 }
 </style>
 </head>
 
 <body>
+  <div class="hearts" id="hearts"></div>
 
-<div class="hearts" id="hearts"></div>
+  <div class="card" id="card">
+    <h1>Do you wanna be my Valentine?</h1>
 
-<div class="card">
-  <h1>Do you wanna be my Valentine?</h1>
+    <div class="stage dim" id="stage">
+      <button class="btn" id="yes">YES</button>
+      <button class="btn" id="no" type="button">NO</button>
 
-  <div class="stage" id="stage">
-    <button class="btn" id="yes">YES</button>
-    <button class="btn" id="no">NO</button>
+      <div class="result" id="result">
+        <div class="bigHeart"></div>
+        <div class="initials">J+M</div>
+      </div>
+    </div>
   </div>
-
-  <div class="overlay" id="overlay">
-    <div class="success">She said YES 💗</div>
-  </div>
-</div>
 
 <script>
+/* Falling hearts */
 const heartsWrap = document.getElementById('hearts');
-const HEART_COUNT = 30;
-
-// FALLENDE HERZEN
+const HEART_COUNT = 34;
 for (let i = 0; i < HEART_COUNT; i++) {
   const h = document.createElement('div');
   h.className = 'heart';
   h.style.left = Math.random()*100 + 'vw';
-  h.style.animationDuration = (8 + Math.random()*8) + 's';
-  h.style.animationDelay = (-Math.random()*8) + 's';
-  h.style.setProperty('--drift', (Math.random()*140 - 70) + 'px');
+  h.style.animationDuration = (8 + Math.random()*9) + 's';
+  h.style.animationDelay = (-Math.random()*9) + 's';
+  h.style.setProperty('--drift', (Math.random()*160 - 80) + 'px');
   h.style.setProperty('--rot', (Math.random()*180 - 90) + 'deg');
   heartsWrap.appendChild(h);
 }
@@ -195,40 +200,96 @@ for (let i = 0; i < HEART_COUNT; i++) {
 const stage = document.getElementById('stage');
 const noBtn = document.getElementById('no');
 const yesBtn = document.getElementById('yes');
-const overlay = document.getElementById('overlay');
+const result = document.getElementById('result');
 
-function moveNoButton(){
+/* Make NO essentially impossible to click */
+function relocateNo(farFromX, farFromY){
   const pad = 10;
   const s = stage.getBoundingClientRect();
   const b = noBtn.getBoundingClientRect();
 
-  const maxX = s.width - b.width - pad;
-  const minX = pad;
-  const maxY = s.height - b.height - pad;
-  const minY = pad;
+  const minX = pad, maxX = s.width - b.width - pad;
+  const minY = pad, maxY = s.height - b.height - pad;
 
-  const x = minX + Math.random()*(maxX-minX);
-  const y = minY + Math.random()*(maxY-minY);
+  // Try multiple times to find a spot far away from cursor
+  let best = null;
+  for(let i=0;i<18;i++){
+    const x = minX + Math.random()*(maxX-minX);
+    const y = minY + Math.random()*(maxY-minY);
+    const dx = (x + b.width/2) - farFromX;
+    const dy = (y + b.height/2) - farFromY;
+    const dist = Math.hypot(dx, dy);
+    if(!best || dist > best.dist) best = {x,y,dist};
+  }
 
-  noBtn.style.left = (x + b.width/2) + 'px';
-  noBtn.style.top  = (y + b.height/2) + 'px';
+  noBtn.style.left = (best.x + b.width/2) + 'px';
+  noBtn.style.top  = (best.y + b.height/2) + 'px';
 }
 
-// NO springt sofort aggressiv weg
-noBtn.addEventListener('mouseenter', moveNoButton);
-noBtn.addEventListener('pointerdown', (e)=>{ e.preventDefault(); moveNoButton(); });
-noBtn.addEventListener('click', (e)=>{ e.preventDefault(); moveNoButton(); });
+function cursorPosInStage(e){
+  const s = stage.getBoundingClientRect();
+  const x = e.clientX - s.left;
+  const y = e.clientY - s.top;
+  return {x,y};
+}
 
-// YES → Overlay + SMS-Vorschlag öffnen
-yesBtn.addEventListener('click', ()=>{
-  overlay.classList.add('show');
+// Jump away when you get close (even before hover)
+stage.addEventListener('pointermove', (e)=>{
+  const p = cursorPosInStage(e);
+  const b = noBtn.getBoundingClientRect();
+  const s = stage.getBoundingClientRect();
+  const noCenterX = (b.left - s.left) + b.width/2;
+  const noCenterY = (b.top  - s.top ) + b.height/2;
 
-  const message = encodeURIComponent("She said YES to Valentine 💗");
-  window.location.href = "sms:01608347263?body=" + message;
+  const dist = Math.hypot(p.x - noCenterX, p.y - noCenterY);
+  if(dist < 140){ // big radius => basically no chance
+    relocateNo(p.x, p.y);
+  }
 });
 
-overlay.addEventListener('click', ()=> overlay.classList.remove('show'));
-</script>
+// Also dodge on any attempt to click/touch it
+noBtn.addEventListener('pointerdown', (e)=>{
+  e.preventDefault();
+  const p = cursorPosInStage(e);
+  relocateNo(p.x, p.y);
+});
+noBtn.addEventListener('click', (e)=>{
+  e.preventDefault();
+  const s = stage.getBoundingClientRect();
+  relocateNo(s.width/2, s.height/2);
+});
 
+// Initial place
+requestAnimationFrame(()=>{
+  noBtn.style.left = '72%';
+  noBtn.style.top = '50%';
+});
+
+/* YES: only once -> replace with big heart J+M */
+let locked = false;
+yesBtn.addEventListener('click', ()=>{
+  if(locked) return;
+  locked = true;
+
+  // disable & hide buttons
+  yesBtn.disabled = true;
+  noBtn.disabled = true;
+  yesBtn.style.display = 'none';
+  noBtn.style.display = 'none';
+
+  // show result
+  stage.classList.remove('dim');
+  result.style.display = 'block';
+
+  // Try to open WhatsApp with a prefilled message to your number (she must tap send)
+  // If WhatsApp isn't available, you can switch to SMS by replacing the URL.
+  const msg = encodeURIComponent("I said YES.");
+  // WhatsApp format requires country code; Germany = 49, drop leading 0
+  const waUrl = "https://wa.me/491608347263?text=" + msg;
+
+  // Open in new tab/window (works best when hosted, e.g., GitHub Pages)
+  window.open(waUrl, "_blank");
+});
+</script>
 </body>
 </html>
