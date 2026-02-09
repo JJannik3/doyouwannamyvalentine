@@ -8,31 +8,17 @@
 <style>
 :root{
   --pink:#ff2e63;
-  --pink2:#ff6b9a;
   --soft:#ffe3ee;
-  --deep:#7a0030;
+  --deep:#b0003a;
 }
 
 html,body{height:100%;margin:0;font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;}
 body{
   overflow:hidden;
+  background: linear-gradient(180deg, #fff 40%, var(--soft) 100%);
   display:grid;
   place-items:center;
   position:relative;
-
-  /* animated romantic background */
-  background:
-    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.35), transparent 60%),
-    radial-gradient(900px 600px at 85% 20%, rgba(255,255,255,.18), transparent 55%),
-    radial-gradient(1100px 700px at 50% 85%, rgba(255,255,255,.18), transparent 60%),
-    linear-gradient(120deg, #ff2e63, #ff6b9a, #ff2e63, #ff9bbd);
-  background-size: 130% 130%;
-  animation: bgMove 10s ease-in-out infinite alternate;
-}
-
-@keyframes bgMove{
-  from{ background-position: 0% 0%; }
-  to{ background-position: 100% 100%; }
 }
 
 /* Falling CSS hearts */
@@ -40,17 +26,16 @@ body{
 .heart{
   position:absolute; top:-10vh;
   width:16px; height:16px;
-  background: rgba(255,255,255,.92);
+  background: var(--pink);
   transform: rotate(45deg);
   animation: fall linear infinite;
-  opacity:.75;
-  filter: drop-shadow(0 10px 22px rgba(0,0,0,.18));
+  opacity:.85;
 }
 .heart:before,.heart:after{
   content:"";
   position:absolute;
   width:16px; height:16px;
-  background: rgba(255,255,255,.92);
+  background: var(--pink);
   border-radius:50%;
 }
 .heart:before{ top:-8px; left:0; }
@@ -58,42 +43,41 @@ body{
 
 @keyframes fall{
   from{ transform: translateY(0) translateX(0) rotate(45deg); opacity:0; }
-  12%{ opacity:.85; }
+  10%{ opacity:.9; }
   to{ transform: translateY(115vh) translateX(var(--drift)) rotate(var(--rot)); opacity:0; }
 }
 
 .card{
-  width:min(580px, 92vw);
-  padding: 46px 30px 30px;
-  border-radius: 28px;
-  background: rgba(255,255,255,.16);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 22px 80px rgba(0,0,0,.22);
-  border: 1px solid rgba(255,255,255,.28);
+  width:min(560px, 92vw);
+  padding: 42px 30px 30px;
+  border-radius: 26px;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 18px 60px rgba(0,0,0,.12);
+  border: 1px solid rgba(255,255,255,.85);
   text-align:center;
   position:relative;
   z-index:2;
 }
 
-/* Title animation: float + shimmer */
+/* Title animation */
 h1{
   margin: 0 0 18px;
   font-size: clamp(28px, 4.2vw, 44px);
-  color: rgba(255,255,255,.96);
+  color: var(--deep);
   position:relative;
 
   opacity:0;
-  transform: translateY(12px) scale(.985);
-  animation:
-    titleIn .95s cubic-bezier(.2,.9,.2,1) forwards,
-    titleFloat 4.8s ease-in-out 1.2s infinite;
-  text-shadow: 0 18px 55px rgba(0,0,0,.24);
+  transform: translateY(10px) scale(.98);
+  animation: titleIn .9s cubic-bezier(.2,.9,.2,1) forwards,
+             titleFloat 4.2s ease-in-out 1.1s infinite;
+  text-shadow: 0 0 0 rgba(255,46,99,0);
 }
 
 @keyframes titleIn{
-  0%{ opacity:0; transform: translateY(14px) scale(.98); filter: blur(1px); }
-  70%{ opacity:1; transform: translateY(-2px) scale(1.01); filter: blur(0); }
-  100%{ opacity:1; transform: translateY(0) scale(1); }
+  0%{ opacity:0; transform: translateY(12px) scale(.98); text-shadow: 0 0 0 rgba(255,46,99,0); }
+  65%{ opacity:1; transform: translateY(-2px) scale(1.01); text-shadow: 0 18px 55px rgba(255,46,99,.18); }
+  100%{ opacity:1; transform: translateY(0) scale(1); text-shadow: 0 14px 45px rgba(255,46,99,.14); }
 }
 
 @keyframes titleFloat{
@@ -101,54 +85,36 @@ h1{
   50%{ transform: translateY(-2px) scale(1.002); }
 }
 
-/* Shimmer stroke */
-h1::before{
-  content:"";
-  position:absolute;
-  inset:-10px -16px;
-  border-radius: 20px;
-  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.22) 25%, transparent 50%, rgba(255,255,255,.18) 75%, transparent 100%);
-  filter: blur(10px);
-  opacity:.55;
-  transform: translateX(-40%);
-  animation: shimmer 2.9s ease-in-out 1.1s infinite;
-  pointer-events:none;
-}
-@keyframes shimmer{
-  0%{ transform: translateX(-55%); opacity:.25; }
-  45%{ opacity:.55; }
-  100%{ transform: translateX(55%); opacity:.25; }
-}
-
-/* Cute underline dots */
+/* Cute underline made of tiny hearts */
 h1::after{
   content:"";
   position:absolute;
   left:50%;
   bottom:-10px;
   translate:-50% 0;
-  width:min(340px, 76%);
+  width:min(320px, 72%);
   height:10px;
   opacity:0;
-  animation: underlineIn .9s ease-out .45s forwards;
+  animation: underlineIn .9s ease-out .35s forwards;
   background:
-    radial-gradient(circle at 10px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 30px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 50px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 70px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 90px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 110px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 130px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 150px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 170px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 190px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 210px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 230px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 250px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 270px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px),
-    radial-gradient(circle at 290px 5px, rgba(255,255,255,.92) 0 3px, transparent 3px);
-  filter: drop-shadow(0 12px 30px rgba(0,0,0,.22));
+    radial-gradient(circle at 10px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 30px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 50px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 70px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 90px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 110px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 130px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 150px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 170px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 190px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 210px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 230px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 250px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 270px 5px, var(--pink) 0 3px, transparent 3px),
+    radial-gradient(circle at 290px 5px, var(--pink) 0 3px, transparent 3px);
+  filter: drop-shadow(0 10px 22px rgba(255,46,99,.18));
 }
+
 @keyframes underlineIn{
   from{ opacity:0; transform: translateY(4px); }
   to{ opacity:.95; transform: translateY(0); }
@@ -156,10 +122,10 @@ h1::after{
 
 .stage{
   position:relative;
-  height: 160px;
+  height: 150px;
   border-radius: 18px;
-  background: rgba(255,255,255,.14);
-  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(255,255,255,.7);
   overflow:hidden;
 }
 
@@ -173,8 +139,8 @@ h1::after{
   border: none;
   cursor:pointer;
   font-size: 16px;
-  font-weight: 800;
-  box-shadow: 0 16px 40px rgba(0,0,0,.24);
+  font-weight: 750;
+  box-shadow: 0 12px 30px rgba(0,0,0,.12);
   transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
   user-select:none;
   -webkit-tap-highlight-color: transparent;
@@ -182,40 +148,41 @@ h1::after{
 
 #yes{
   left: 36%;
-  background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,255,255,.78));
-  color: var(--deep);
+  background: linear-gradient(135deg, #ff2e63, #ff6b9a);
+  color: #fff;
 }
-#yes:hover{ filter: brightness(1.03); box-shadow: 0 20px 48px rgba(0,0,0,.28); }
+#yes:hover{ filter: brightness(1.03); box-shadow: 0 16px 38px rgba(0,0,0,.16); }
 
 #no{
   left: 72%;
-  background: rgba(255,255,255,.12);
-  color: rgba(255,255,255,.92);
-  border: 1px solid rgba(255,255,255,.35);
+  background: #fff;
+  color: var(--deep);
+  border: 1px solid #ff6b9a;
 
   /* ABSOLUT NIE KLICKBAR */
   pointer-events: none;
 }
 
-/* Final overlay is transparent -> keeps background visible */
+/* Final overlay keeps the SAME background (transparent) */
 .final{
   position:fixed;
   inset:0;
   display:none;
   place-items:center;
   z-index:10;
+
+  /* transparent => shows the original background */
   background: transparent;
 }
+
 .final.show{ display:grid; }
 
-/* Big heart */
 .finalHeartWrap{
-  width:min(92vmin, 650px);
-  height:min(92vmin, 650px);
+  width:min(86vmin, 560px);
+  height:min(86vmin, 560px);
   position:relative;
-  transform: scale(.55);
-  animation: pop .38s cubic-bezier(.2,.9,.2,1) forwards;
-  filter: drop-shadow(0 24px 110px rgba(0,0,0,.38));
+  transform: scale(.6);
+  animation: pop .35s ease-out forwards;
 }
 
 @keyframes pop{
@@ -225,14 +192,14 @@ h1::after{
 .finalHeart{
   width:100%;
   height:100%;
-  background: rgba(255,255,255,.95);
+  background: var(--pink);
   transform: rotate(45deg);
   border-radius: 18%;
   position:absolute;
   left:50%;
   top:50%;
   translate:-50% -50%;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
+  box-shadow: 0 22px 90px rgba(0,0,0,.26);
   animation: pulse 1s ease-in-out infinite alternate;
 }
 .finalHeart:before,.finalHeart:after{
@@ -240,7 +207,7 @@ h1::after{
   position:absolute;
   width:100%;
   height:100%;
-  background: rgba(255,255,255,.95);
+  background: var(--pink);
   border-radius:50%;
 }
 .finalHeart:before{ top:-50%; left:0; }
@@ -248,21 +215,20 @@ h1::after{
 
 @keyframes pulse{
   from{ transform: rotate(45deg) scale(1.00); }
-  to{ transform: rotate(45deg) scale(1.045); }
+  to{ transform: rotate(45deg) scale(1.05); }
 }
 
-/* Initials */
 .finalText{
   position:absolute;
   left:50%;
   top:50%;
   translate:-50% -50%;
-  color: var(--deep);
-  font-weight: 950;
+  color:#fff;
+  font-weight: 900;
   letter-spacing: .10em;
-  font-size: clamp(44px, 9vmin, 86px);
+  font-size: clamp(40px, 8vmin, 78px);
   text-transform: uppercase;
-  text-shadow: 0 14px 40px rgba(0,0,0,.18);
+  text-shadow: 0 12px 44px rgba(0,0,0,.30);
   z-index:2;
   transform: rotate(-45deg);
 }
@@ -281,10 +247,11 @@ h1::after{
     </div>
   </div>
 
+  <!-- Overlay heart, background stays the same -->
   <div class="final" id="final">
     <div class="finalHeartWrap">
       <div class="finalHeart"></div>
-      <div class="finalText">J+M</div>
+      <div class="finalText">M+J</div>
     </div>
   </div>
 
@@ -309,7 +276,7 @@ const yesBtn = document.getElementById('yes');
 const card = document.getElementById('card');
 const final = document.getElementById('final');
 
-/* NO: aggressive dodge (even though it’s not clickable anyway) */
+/* Make NO basically impossible: it also has pointer-events:none (so never clickable). */
 function relocateNo(farFromX, farFromY){
   const pad = 8;
   const s = stage.getBoundingClientRect();
@@ -319,7 +286,7 @@ function relocateNo(farFromX, farFromY){
   const minY = pad, maxY = s.height - b.height - pad;
 
   let best = null;
-  for(let i=0;i<50;i++){
+  for(let i=0;i<40;i++){
     const x = minX + Math.random()*(maxX-minX);
     const y = minY + Math.random()*(maxY-minY);
     const dx = (x + b.width/2) - farFromX;
@@ -339,6 +306,7 @@ function cursorPosInStage(e){
   return {x,y};
 }
 
+// Extra aggressive dodge radius + also on touchmove
 function dodge(e){
   const p = cursorPosInStage(e);
   const b = noBtn.getBoundingClientRect();
@@ -347,33 +315,36 @@ function dodge(e){
   const noCenterY = (b.top  - s.top ) + b.height/2;
 
   const dist = Math.hypot(p.x - noCenterX, p.y - noCenterY);
-  if(dist < 320){
+  if(dist < 260){
     relocateNo(p.x, p.y);
   }
 }
 
 stage.addEventListener('pointermove', dodge, {passive:true});
 stage.addEventListener('touchmove', dodge, {passive:true});
+// Also reposition periodically so it never “sits still”
 setInterval(()=>{
   const s = stage.getBoundingClientRect();
   relocateNo(s.width/2, s.height/2);
-}, 520);
+}, 650);
 
+// Initial place
 requestAnimationFrame(()=>{
   noBtn.style.left = '72%';
   noBtn.style.top = '50%';
 });
 
-/* YES: show big heart + push + WhatsApp */
+/* YES: show big heart overlay + notifications */
 let locked = false;
 yesBtn.addEventListener('click', async ()=>{
   if(locked) return;
   locked = true;
 
+  // Hide card, show overlay (background stays)
   card.style.display = 'none';
   final.classList.add('show');
 
-  // Push to your phone via ntfy
+  // 1) Push to your phone via ntfy (recommended)
   const NTFY_TOPIC = "valentine-olli-01608347263";
   try{
     await fetch("https://ntfy.sh/" + NTFY_TOPIC, {
@@ -385,9 +356,11 @@ yesBtn.addEventListener('click', async ()=>{
       },
       body: "Sie hat JA geklickt."
     });
-  }catch(err){}
+  }catch(err){
+    // ignore
+  }
 
-  // WhatsApp fallback
+  // 2) WhatsApp fallback
   const msg = encodeURIComponent("Ich habe YES geklickt.");
   const waUrl = "https://wa.me/491608347263?text=" + msg;
   window.open(waUrl, "_blank");
